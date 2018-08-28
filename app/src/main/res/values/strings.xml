@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MeteoApp</string>
+    <string name="createcity_title">New city name ?</string>
+    <string name="createcity_positive">Create city</string>
+    <string name="createcity_negative">Cancel add city</string>
+    <string name="createcity_cityhint">New York, London ...</string>
+    <string name="menu_create_city">Create city</string>
+    <string name="errorToastSaveCityFragment">ERROR CREATE CITY</string>
 </resources>
