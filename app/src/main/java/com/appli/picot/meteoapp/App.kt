@@ -9,7 +9,6 @@ class App: Application() {
         lateinit var instance : App
 
         val database: DataBase by lazy {
-            Log.i("Application", "database")
             DataBase(instance)
         }
     }

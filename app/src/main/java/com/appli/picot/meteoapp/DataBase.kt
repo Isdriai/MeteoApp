@@ -20,6 +20,10 @@ CREATE TABLE $CITY_TABLE_NAME (
     $CITY_KEY_NAME TEXT)
 """
 
+private const val QUERY_SELECT_ALL = """
+    SELECT * FROM $CITY_TABLE_NAME
+"""
+
 data class DataBase(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
         Log.i("DatabaseOncreate", "onCreate1")
@@ -37,5 +41,19 @@ data class DataBase(val context: Context): SQLiteOpenHelper(context, DATABASE_NA
         city.id = writableDatabase.insert(CITY_TABLE_NAME, null, values)
 
         return city.id > 0
+    }
+
+    fun getAllCities(): MutableList<City>{
+        val cities = mutableListOf<City>()
+
+        readableDatabase.rawQuery(QUERY_SELECT_ALL, null).use {
+            cursor ->
+            while(cursor.moveToNext()){
+                cities.add(City(cursor.getLong(cursor.getColumnIndex(CITY_KEY_ID)),
+                        cursor.getString(cursor.getColumnIndex(CITY_KEY_NAME))))
+            }
+
+        }
+        return cities
     }
 }
