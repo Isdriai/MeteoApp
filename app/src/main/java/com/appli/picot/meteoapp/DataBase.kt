@@ -25,6 +25,10 @@ private const val QUERY_SELECT_ALL = """
 """
 
 data class DataBase(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
+
+    val TAG = DataBase::class.java.simpleName
+
     override fun onCreate(db: SQLiteDatabase?) {
         Log.i("DatabaseOncreate", "onCreate1")
         db?.execSQL(CITY_TABLE_CREATE)
@@ -37,7 +41,8 @@ data class DataBase(val context: Context): SQLiteOpenHelper(context, DATABASE_NA
     fun addCity(city: City) : Boolean{
         val values = ContentValues()
         values.put(CITY_KEY_NAME, city.name)
-
+        Log.i(TAG, "ajout city")
+        Log.i(TAG, values.toString())
         city.id = writableDatabase.insert(CITY_TABLE_NAME, null, values)
 
         return city.id > 0
@@ -49,10 +54,11 @@ data class DataBase(val context: Context): SQLiteOpenHelper(context, DATABASE_NA
         readableDatabase.rawQuery(QUERY_SELECT_ALL, null).use {
             cursor ->
             while(cursor.moveToNext()){
-                cities.add(City(cursor.getLong(cursor.getColumnIndex(CITY_KEY_ID)),
-                        cursor.getString(cursor.getColumnIndex(CITY_KEY_NAME))))
+                val city  = City(cursor.getLong(cursor.getColumnIndex(CITY_KEY_ID)),
+                        cursor.getString(cursor.getColumnIndex(CITY_KEY_NAME)))
+                Log.i(TAG, "ville = " + city.toString())
+                cities.add(city)
             }
-
         }
         return cities
     }
