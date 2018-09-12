@@ -6,4 +6,12 @@
     <string name="createcity_cityhint">New York, London ...</string>
     <string name="menu_create_city">Create city</string>
     <string name="errorToastSaveCityFragment">ERROR CREATE CITY</string>
+    <string name="deleteCity_Title">Do you really want to delete %1$s?</string>
+    <string name="deleteCity_positive">Delete City</string>
+    <string name="deleteCity_negative">Cancel</string>
+    <string name="city_removed_toast">city removed</string>
+    <string name="message_error_coul_not_load_city">Could not load city Weather</string>
+    <string name="weather_temperature_value">%1$d °C</string>
+    <string name="weather_humidity_value">%1$d %%</string>
+    <string name="weather_pressure_value">%1$d hPa</string>
 </resources>

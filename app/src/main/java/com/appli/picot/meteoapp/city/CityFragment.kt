@@ -14,10 +14,16 @@ import com.appli.picot.meteoapp.R
 
 class CityFragment: Fragment(), CityAdapter.CityItemListener {
 
+    interface CityFragmentListener {
+        fun onCitySelected(city: City)
+        fun onEmptyCities()
+    }
+
+    var listener: CityFragmentListener? = null
 
     lateinit var cities: MutableList<City>
     private lateinit var database: DataBase
-    private lateinit var recylerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CityAdapter
 
     val TAG = CityFragment::class.java.simpleName
@@ -31,8 +37,8 @@ class CityFragment: Fragment(), CityAdapter.CityItemListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.city_fragment, container, false)
-        recylerView = view.findViewById(R.id.listCity)
-        recylerView.layoutManager = LinearLayoutManager(context)
+        recyclerView = view.findViewById(R.id.listCity)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         return view
     }
 
@@ -42,15 +48,39 @@ class CityFragment: Fragment(), CityAdapter.CityItemListener {
 
         cities = database.getAllCities()
         adapter = CityAdapter(cities, this)
-        recylerView.adapter = adapter
+        recyclerView.adapter = adapter
     }
 
     override fun citySelected(city: City) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        listener?.onCitySelected(city)
     }
 
     override fun cityDeleted(city: City) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val deleteCityFragment = DeleteCityDialog.newInstance(city.name)
+        deleteCityFragment.listener = object: DeleteCityDialog.DeleteCityDialogListener {
+            override fun negativeClick() {
+
+            }
+
+            override fun positiveClick() {
+                if(database.deleteCity(city)){
+                    Log.i(TAG, "suppression cote fragment")
+                    cities.remove(city)
+                    adapter.notifyDataSetChanged()
+                    selectFirsCity()
+                    Toast.makeText(deleteCityFragment.context, getString(R.string.city_removed_toast), Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        deleteCityFragment.show(fragmentManager, "DeleteCityDialogFragment")
+    }
+
+    fun selectFirsCity(){
+        when(cities.isEmpty()){
+            true -> listener?.onEmptyCities()
+            false -> citySelected(cities.first())
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

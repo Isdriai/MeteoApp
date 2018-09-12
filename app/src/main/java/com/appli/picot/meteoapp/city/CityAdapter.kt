@@ -14,6 +14,7 @@ data class CityAdapter(val cities: MutableList<City>, val itemClickListener: Cit
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val cardView = itemView.findViewById<CardView>(R.id.cityCardview)
         val cityTextview = itemView.findViewById<TextView>(R.id.cityTextview)
+        val delete = itemView.findViewById<View>(R.id.delete)
     }
 
     interface CityItemListener {
@@ -36,11 +37,14 @@ data class CityAdapter(val cities: MutableList<City>, val itemClickListener: Cit
         holder.cityTextview.text = city.name
         holder.cardView.tag = city
         holder.cardView.setOnClickListener(this@CityAdapter)
+        holder.delete.tag = city
+        holder.delete.setOnClickListener(this@CityAdapter)
     }
 
     override fun onClick(view: View) {
         when(view.id){
             R.id.cityCardview -> itemClickListener.citySelected(view.tag as City)
+            R.id.delete -> itemClickListener.cityDeleted(view.tag as City)
         }
     }
 

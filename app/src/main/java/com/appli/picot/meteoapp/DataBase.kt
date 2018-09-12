@@ -62,4 +62,11 @@ data class DataBase(val context: Context): SQLiteOpenHelper(context, DATABASE_NA
         }
         return cities
     }
+
+    fun deleteCity(city: City): Boolean {
+        Log.i(TAG, "suppression de ${city.name}")
+        return writableDatabase.delete(CITY_TABLE_NAME,
+                "$CITY_KEY_ID = ?",
+                arrayOf("${city.id}")) == 1
+    }
 }
